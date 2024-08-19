@@ -2,3 +2,19 @@
     scrollbar-width: none !important;
     scrollbar-color: transparent transparent !important;
 }
+
+.custom-shadow {
+    border-radius: 50px;
+    background: #e0e0e0;
+    box-shadow: 5px 5px 13px #5a5a5a4f,
+        -5px -5px 13px #ffffff;
+}
+
+.custom-btn {
+    border-radius: 15px;
+    background: #e0e0e0;
+    box-shadow: 5px 5px 13px #5a5a5a4f,
+        -5px -5px 13px #ffffff;
+    padding-inline: 20px;
+    padding-block: 5px;
+}
