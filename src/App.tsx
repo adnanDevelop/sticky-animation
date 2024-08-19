@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
@@ -6,9 +6,30 @@ import "swiper/css/navigation";
 import { Autoplay } from "swiper/modules";
 import Navbar from "./components/Navbar";
 
+const badgeData = [
+  "Call Recording",
+  "Voice Menu",
+  "Call Logs",
+  "Call Senarios",
+  "Voicemail",
+  "Queue Management",
+  "Inbound notification",
+  "Static and Reporting",
+  "Callback for Missed Calls",
+  "Speech Analytic",
+  "Lead Generator",
+  "Form Tracking",
+  "Tagging",
+  "Call Tracking",
+  "Analytic Reports",
+];
+
 function App() {
   const [image, setImage] = useState("/image/img-1.png");
   const [activeTab, setActiveTab] = useState("industry");
+  const [currentSection, setCurrentSection] = useState(1);
+  const sectionsRef = useRef([]);
+  const badgesRef = useRef([]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,6 +39,17 @@ function App() {
         if (sectionTop <= window.innerHeight / 2) {
           setImage(`/image/img-${index + 2}.png`);
         }
+
+        const scrollTop = window.scrollY;
+        sectionsRef.current.forEach((section: HTMLElement, index) => {
+          if (section) {
+            const sectionTop = section.offsetTop;
+            const sectionBottom = sectionTop + section.offsetHeight;
+            if (scrollTop >= sectionTop && scrollTop < sectionBottom) {
+              setCurrentSection(index + 1);
+            }
+          }
+        });
       });
     };
 
@@ -162,22 +194,45 @@ function App() {
       </section>
 
       {/* Badge animation */}
-      <section className="px-[100px]">
-        <div className="sticky top-0 h-screen  col-span-5   flex items-center justify-center">
-          <img src={image} className="w-[700px]" alt="Sticky" />
-        </div>
+      <section className="px-[100px] grid grid-cols-12">
         <div className="p-4 space-y-20 col-span-7">
-          <div className="section h-[100vh] text-black flex  justify-center flex-col">
-            <h2 className="text-2xl font-bold mb-4">Section 1</h2>
-            <p className="text-lg">This is the content of Section 1.</p>
-          </div>
-          <div className="section h-[100vh] text-black flex  justify-center flex-col">
-            <h2 className="text-2xl font-bold mb-4">Section 2</h2>
-            <p className="text-lg">This is the content of Section 2.</p>
-          </div>
-          <div className="section h-[100vh] text-black flex  justify-center flex-col">
-            <h2 className="text-2xl font-bold mb-4">Section 3</h2>
-            <p className="text-lg">This is the content of Section 3.</p>
+          {[...Array(3)].map((_, sectionIndex) => (
+            <div
+              className="section h-[100vh] text-black flex justify-center flex-col"
+              ref={(el) => (sectionsRef.current[sectionIndex] = el)}
+              key={sectionIndex}
+            >
+              <h2 className="text-2xl font-bold mb-4">
+                Section {sectionIndex + 1}
+              </h2>
+              <p className="text-lg">
+                This is the content of Section {sectionIndex + 1}.
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Border badges */}
+        <div className="sticky top-0 h-screen col-span-5 flex items-center justify-center">
+          <div className="flex flex-wrap gap-3">
+            {badgeData.map((element, index) => {
+              const groupId = Math.floor(index / 5) + 1;
+              const isActive = groupId === currentSection;
+              return (
+                <button
+                  id={`group-${groupId}`}
+                  className={`py-[12px] px-[30px] rounded-full border ${
+                    isActive
+                      ? "bg-blue-500 text-white border-blue-500"
+                      : "text-gray-700 border-gray-400"
+                  }`}
+                  key={index}
+                  ref={(el) => (badgesRef.current[index] = el)}
+                >
+                  {element}
+                </button>
+              );
+            })}
           </div>
         </div>
       </section>
