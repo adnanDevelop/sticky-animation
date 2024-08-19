@@ -28,8 +28,8 @@ function App() {
   const [image, setImage] = useState("/image/img-1.png");
   const [activeTab, setActiveTab] = useState("industry");
   const [currentSection, setCurrentSection] = useState(1);
-  const sectionsRef = useRef([]);
-  const badgesRef = useRef([]);
+  const sectionsRef = useRef<HTMLElement[]>([]);
+  const badgesRef = useRef<HTMLElement[]>([]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -199,7 +199,11 @@ function App() {
           {[...Array(3)].map((_, sectionIndex) => (
             <div
               className="section h-[100vh] text-black flex justify-center flex-col"
-              ref={(el) => (sectionsRef.current[sectionIndex] = el)}
+              ref={(el) => {
+                if (el) {
+                  sectionsRef.current[sectionIndex] = el;
+                }
+              }}
               key={sectionIndex}
             >
               <h2 className="text-2xl font-bold mb-4">
@@ -227,7 +231,11 @@ function App() {
                       : "text-gray-700 border-gray-400"
                   }`}
                   key={index}
-                  ref={(el) => (badgesRef.current[index] = el)}
+                  ref={(el) => {
+                    if (el) {
+                      badgesRef.current[index] = el;
+                    }
+                  }}
                 >
                   {element}
                 </button>
